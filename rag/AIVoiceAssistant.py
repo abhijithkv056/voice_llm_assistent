@@ -1,18 +1,17 @@
-from qdrant_client import QdrantClient
 from llama_index.llms.ollama import Ollama
 from llama_index.core import SimpleDirectoryReader
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core import ServiceContext, VectorStoreIndex
-from llama_index.vector_stores.qdrant import QdrantVectorStore
+from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core.storage.storage_context import StorageContext
+import chromadb
 
 import warnings
 warnings.filterwarnings("ignore")
 
 class AIVoiceAssistant:
     def __init__(self):
-        self._qdrant_url = "http://localhost:6333"
-        self._client = QdrantClient(url=self._qdrant_url, prefer_grpc=False)
+        self._chroma_client = chromadb.PersistentClient(path="./chroma_db")
         self._llm = Ollama(model="mistral", request_timeout=120.0)
         self._service_context = ServiceContext.from_defaults(llm=self._llm, embed_model="local")
         self._index = None
@@ -29,14 +28,20 @@ class AIVoiceAssistant:
 
     def _create_kb(self):
         try:
+            # Create collection
+            chroma_collection = self._chroma_client.get_or_create_collection("restaurant_kb")
+            vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
+            storage_context = StorageContext.from_defaults(vector_store=vector_store)
+
+            # Load and index documents
             reader = SimpleDirectoryReader(
-                input_files=[r"D:\dev\aiml\projects\git\voice_assistant_llm\rag\restaurant_file.txt"]
+                input_files=[r"D:\Learning space\ML tutorials\Voice assistent project\voice_assistant_llm\rag\restaurant_file.txt"]
             )
             documents = reader.load_data()
-            vector_store = QdrantVectorStore(client=self._client, collection_name="kitchen_db")
-            storage_context = StorageContext.from_defaults(vector_store=vector_store)
             self._index = VectorStoreIndex.from_documents(
-                documents, service_context=self._service_context, storage_context=storage_context
+                documents, 
+                service_context=self._service_context,
+                storage_context=storage_context
             )
             print("Knowledgebase created successfully!")
         except Exception as e:
