@@ -25,7 +25,7 @@ Before running the code, ensure you have the following dependencies installed:
 1. Clone this repository to your local machine.
 
    ```bash
-   git clone git@github.com:ayaansh-roy/voice_assistant_llm.git
+   git clone git@github.com/abhijithkv056/voice_assistant_llm
 
 2. Install the dependencies using pip.
 
