@@ -1,55 +1,103 @@
-# Build Real-Time AI Voice Assistant With RAG Pipeline And Memory | Mistral LLM | Ollama
+# Restaurant Voice Assistant
 
-This repository contains code for a voice assistant that interacts with an AI model for natural language understanding (NLU). The assistant is designed to record audio input from users, transcribe it, and then interact with the AI model to provide relevant responses.
+A voice-enabled restaurant assistant that helps customers with menu information and order taking using natural language processing.
 
 ## Features
 
-- Record audio input from users in chunks.
-- Transcribe the recorded audio using a pre-trained AI model.
-- Interact with the AI model to generate responses based on user input.
-- Utilizes a knowledge base for context-aware responses.
+- Voice-based interaction with customers
+- Real-time speech-to-text conversion
+- Natural language understanding
+- Menu information retrieval
+- Order taking capabilities
+- Interactive web interface
 
 ## Prerequisites
 
-Before running the code, ensure you have the following dependencies installed:
+- Python 3.10 or higher
+- Ollama installed with Mistral model
+- Working microphone
+- Speakers or headphones
 
-- Python above 3.8
-- `pyaudio`
-- `numpy`
-- `faster_whisper` (Installable via pip)
-- `qdrant_client` (Installable via pip)
-- Other dependencies specified in `requirements.txt`
+## Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd voice_assistant_llm
+```
+
+2. Create a virtual environment:
+```bash
+python -m venv .venv
+```
+
+3. Activate the virtual environment:
+- Windows:
+```bash
+.venv\Scripts\activate
+```
+- Linux/Mac:
+```bash
+source .venv/bin/activate
+```
+
+4. Install the required packages:
+```bash
+pip install -r requirements.txt
+```
+
+5. Make sure Ollama is running and the Mistral model is pulled:
+```bash
+ollama pull mistral
+```
+
+## Running the Application
+
+You can run the application in two ways:
+
+### 1. Command Line Interface
+```bash
+python app.py
+```
+
+### 2. Web Interface (Recommended)
+```bash
+streamlit run streamlit_app.py
+```
+
+The web interface provides:
+- Interactive chat interface
+- Menu display in sidebar
+- Easy-to-use voice recording buttons
+- Visual conversation history
 
 ## Usage
 
-1. Clone this repository to your local machine.
+1. Start the application using either method above
+2. Click "Start Conversation" to begin
+3. Use the microphone button to speak your requests
+4. View the menu in the sidebar
+5. Interact naturally with the assistant
 
-   ```bash
-   git clone git@github.com/abhijithkv056/voice_assistant_llm
+## Project Structure
 
-2. Install the dependencies using pip.
+- `app.py`: Command-line interface version
+- `streamlit_app.py`: Web interface version
+- `voice_service.py`: Voice processing utilities
+- `rag/`: Contains restaurant information files
+- `requirements.txt`: Package dependencies
 
-   ```bash
-   pip install -r requirements.txt
+## Troubleshooting
 
-3. Run the main script app.py.
-
-   ```bash
-   python app.py
-
-4. Follow the prompts to interact with the voice assistant. Speak into the microphone when prompted.
-
-## Configuration
-- You can adjust the default model size and chunk length in the script as per your requirements.
-- Modify the paths and settings related to the knowledge base and AI model if needed.
-
-## Notes
-- Ensure that your system's microphone is correctly configured and accessible by the script.
-- Make sure to handle exceptions and errors gracefully, especially during audio recording and transcription processes.
+- Ensure your microphone is properly connected and has necessary permissions
+- Check if Ollama is running (`ollama serve`)
+- Verify that the Mistral model is downloaded
+- Make sure all dependencies are installed correctly
 
 ## License
-- This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgments
-- The AI model used in this project is based on faster_whisper.
-- Special thanks to the developers of pyaudio, numpy, and scipy for their contributions.
+[Your License]
+
+## Contributing
+
+[Contribution guidelines]
