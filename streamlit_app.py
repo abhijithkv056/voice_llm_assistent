@@ -37,6 +37,49 @@ if 'current_response' not in st.session_state:
 if 'last_response_played' not in st.session_state:
     st.session_state.last_response_played = None
 
+# Sidebar with Menu
+with st.sidebar:
+    st.title("🍽️ Our Menu")
+    st.markdown("---")
+    
+    # Read and display menu from file
+    try:
+        with open(STORAGE_PATH, 'r') as file:
+            menu_content = file.read()
+            
+        # Parse menu content
+        menu_lines = menu_content.split('\n')
+        restaurant_name = next((line.replace('Restaurant Name:', '').strip() 
+                              for line in menu_lines if 'Restaurant Name:' in line), '')
+        
+        # Display restaurant name
+        st.header(restaurant_name)
+        
+        # Find menu items and prices
+        menu_items = []
+        for line in menu_lines:
+            if '-' in line and 'Rupees' in line:
+                item, price = line.split('-')
+                menu_items.append({
+                    'item': item.strip(),
+                    'price': price.replace('Rupees.', '₹').strip()
+                })
+        
+        # Display menu items in a nice format
+        st.subheader("📋 Menu Items")
+        for item in menu_items:
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.write(f"**{item['item']}**")
+            with col2:
+                st.write(f"*{item['price']}*")
+                
+        st.markdown("---")
+        st.caption("Prices are inclusive of all taxes")
+        
+    except Exception as e:
+        st.error(f"Error loading menu: {str(e)}")
+
 # Initialize models and services
 @st.cache_resource
 def initialize_models():
