@@ -101,3 +101,14 @@ The web interface provides:
 ## Contributing
 
 [Contribution guidelines]
+
+
+Internal note:
+
+So how it work:
+
+1. Pyaudio --> access your mic to get a mono audio, 16Khz file -> then save it as .wave which Whisper can read and process
+2. whisper model --> takes the wave file and returns the transcription
+3. LLM -> takes the transcription + context (via RAG) and generates a response based on prompt template
+4. response is saved to an mp3 file via gTTS
+5. the mp3 file is payed back ny pygame library
