@@ -136,20 +136,32 @@ def main():
     index_documents(processed_chunks)    
 
     audio = pyaudio.PyAudio()
-    stream = audio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
     conversation = ConversationHistory(max_history=8)  # Keep last 8 exchanges
 
     try:
         while True:
             chunk_file = "temp_audio_chunk.wav"
             
+            # Open stream for recording
+            stream = audio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
+            
             # Record audio chunk
             print("\nListening...")
             if not record_audio_chunk(audio, stream):
+                # Close stream after recording
+                stream.stop_stream()
+                stream.close()
+                
                 # Transcribe audio
                 transcription = transcribe_audio(model, chunk_file)
                 os.remove(chunk_file)
                 print("\nCustomer: {}".format(transcription))
+                
+                # Check if user wants to end conversation
+                end_phrases = ["end conversation", "stop", "goodbye", "bye", "exit", "quit"]
+                if any(phrase in transcription.lower() for phrase in end_phrases):
+                    print("\nEnding conversation. Goodbye!")
+                    break
                 
                 # Get relevant documents and generate response
                 relevant_docs = find_related_documents(transcription)
@@ -167,13 +179,15 @@ def main():
                     vs.play_text_to_speech(output)
                     print("Assistant: {}\n".format(output))
                     print("-" * 50)
+            else:
+                # Close stream if it was silence
+                stream.stop_stream()
+                stream.close()
 
     except KeyboardInterrupt:
         print("\nStopping...")
 
     finally:
-        stream.stop_stream()
-        stream.close()
         audio.terminate()
 
 if __name__ == "__main__":
