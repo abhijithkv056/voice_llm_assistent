@@ -1,4 +1,4 @@
-# Restaurant Voice Assistant
+# Restaurant Voice Assistant V1
 
 A voice-enabled restaurant assistant that helps customers with menu information and order taking using natural language processing.
 
