@@ -14,7 +14,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 import voice_service as vs
-
+#details
 
 DEFAULT_MODEL_SIZE = "medium"
 DEFAULT_CHUNK_LENGTH = 10
