@@ -3,8 +3,8 @@ import time
 import pygame
 from gtts import gTTS
 
-def play_text_to_speech(text, language='en', slow=False):
-    tts = gTTS(text=text, lang=language, slow=slow)
+def play_text_to_speech(text, language='en-in', slow=False):
+    tts = gTTS(text=text, lang=language, slow=False)
     
     temp_audio_file = "temp_audio.mp3"
     tts.save(temp_audio_file)

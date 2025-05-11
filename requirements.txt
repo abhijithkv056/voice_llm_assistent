@@ -22,7 +22,6 @@ chromadb==0.4.24
 click==8.1.8
 colorama==0.4.6
 coloredlogs==15.0.1
-comtypes==1.4.10
 ctranslate2==4.5.0
 dataclasses-json==0.6.7
 Deprecated==1.2.18
@@ -61,11 +60,12 @@ jsonpointer==3.0.0
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 kubernetes==32.0.1
-langchain==0.3.21
-langchain-community==0.3.20
-langchain-core==0.3.45
-langchain-text-splitters==0.3.7
-langsmith==0.3.17
+langchain>=0.1.0
+langchain-community>=0.0.13
+langchain-core>=0.1.10
+langchain-openai>=0.0.2
+langchain-text-splitters>=0.0.1
+langsmith>=0.0.77
 llama-index==0.9.48
 llama-index-core==0.10.18
 llama-index-embeddings-huggingface==0.1.4
@@ -84,7 +84,7 @@ narwhals==1.31.0
 nest-asyncio==1.6.0
 networkx==3.4.2
 nltk==3.9.1
-numpy==2.2.4
+numpy>=1.22.5,<2.0.0
 oauthlib==3.2.2
 onnxruntime==1.21.0
 openai==1.66.5
@@ -119,9 +119,7 @@ Pygments==2.19.1
 PyMuPDF==1.25.4
 pypdf==4.3.1
 PyPika==0.48.9
-pypiwin32==223
 pyproject_hooks==1.2.0
-pyreadline3==3.5.4
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pyttsx3==2.98
@@ -169,4 +167,3 @@ wrapt==1.17.2
 yarl==1.18.3
 zipp==3.21.0
 zstandard==0.23.0
-langchain-openai==0.1.8

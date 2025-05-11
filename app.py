@@ -9,7 +9,6 @@ import tempfile
 
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_ollama.llms import OllamaLLM
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -20,9 +19,11 @@ import voice_service as vs
 DEFAULT_MODEL_SIZE = "medium"
 DEFAULT_CHUNK_LENGTH = 10
 STORAGE_PATH = 'rag/restaurant_file.txt'
-EMBEDDING_MODEL = OpenAIEmbeddings()
+
+# Initialize OpenAI models with API key from Streamlit secrets
+EMBEDDING_MODEL = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
 DOCUMENT_VECTOR_DB = InMemoryVectorStore(EMBEDDING_MODEL)
-LANGUAGE_MODEL = ChatOpenAI()
+LANGUAGE_MODEL = ChatOpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"])
 
 PROMPT_TEMPLATE = """
 You are an voice assistant. You interact with customer calls and provide information from the context provided.
@@ -181,16 +182,17 @@ def main():
                 )
                 
                 if output:
-                    output = output.lstrip()
+                    
                     st.session_state.conversation.add_exchange(transcription, output)
                     
                     # Display assistant message
-                    st.session_state.messages.append({"role": "assistant", "content": output})
+                    assistant_text = output.content if hasattr(output, "content") else str(output)
+                    st.session_state.messages.append({"role": "assistant", "content": assistant_text})
                     with st.chat_message("assistant"):
-                        st.markdown(output)
+                        st.markdown(assistant_text)
                     
                     # Play audio response
-                    vs.play_text_to_speech(output)
+                    vs.play_text_to_speech(assistant_text)
             
             st.rerun()
 
