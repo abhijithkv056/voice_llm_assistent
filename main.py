@@ -5,7 +5,7 @@ import numpy as np
 from scipy.io import wavfile
 from faster_whisper import WhisperModel
 
-from langchain_ollama import OllamaEmbeddings
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama.llms import OllamaLLM
 from langchain_core.vectorstores import InMemoryVectorStore
@@ -34,9 +34,9 @@ Restaurant Information: {document_context}
 Answer:
 """
 STORAGE_PATH = 'rag/restaurant_file.txt'
-EMBEDDING_MODEL = OllamaEmbeddings(model="mistral")
+EMBEDDING_MODEL = OpenAIEmbeddings()
 DOCUMENT_VECTOR_DB = InMemoryVectorStore(EMBEDDING_MODEL)
-LANGUAGE_MODEL = OllamaLLM(model="mistral")
+LANGUAGE_MODEL = ChatOpenAI()
 
 class ConversationHistory:
     def __init__(self, max_history=5):

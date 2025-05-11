@@ -7,7 +7,7 @@ from faster_whisper import WhisperModel
 import streamlit as st
 import tempfile
 
-from langchain_ollama import OllamaEmbeddings
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama.llms import OllamaLLM
 from langchain_core.vectorstores import InMemoryVectorStore
@@ -20,9 +20,9 @@ import voice_service as vs
 DEFAULT_MODEL_SIZE = "medium"
 DEFAULT_CHUNK_LENGTH = 10
 STORAGE_PATH = 'rag/restaurant_file.txt'
-EMBEDDING_MODEL = OllamaEmbeddings(model="mistral")
+EMBEDDING_MODEL = OpenAIEmbeddings()
 DOCUMENT_VECTOR_DB = InMemoryVectorStore(EMBEDDING_MODEL)
-LANGUAGE_MODEL = OllamaLLM(model="mistral")
+LANGUAGE_MODEL = ChatOpenAI()
 
 PROMPT_TEMPLATE = """
 You are an voice assistant. You interact with customer calls and provide information from the context provided.
