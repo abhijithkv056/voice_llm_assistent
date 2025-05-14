@@ -3,9 +3,10 @@ import wave
 import pyaudio
 import numpy as np
 from scipy.io import wavfile
-from faster_whisper import WhisperModel
+#from faster_whisper import WhisperModel
 import streamlit as st
 import tempfile
+import openai
 
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -19,6 +20,8 @@ import voice_service as vs
 DEFAULT_MODEL_SIZE = "medium"
 DEFAULT_CHUNK_LENGTH = 10
 STORAGE_PATH = 'rag/restaurant_file.txt'
+openai.api_key = os.getenv("OPENAI_API_KEY")
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # Initialize OpenAI models with API key from Streamlit secrets
 EMBEDDING_MODEL = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
@@ -136,7 +139,7 @@ def main():
     
     # Initialize Whisper model
     model_size = DEFAULT_MODEL_SIZE + ".en"
-    model = WhisperModel(model_size, device="cpu", compute_type="int8")
+    #model = WhisperModel(model_size, device="cpu", compute_type="int8")
     
     # Load and index documents
     raw_docs = load_pdf_documents(STORAGE_PATH)
@@ -162,7 +165,13 @@ def main():
         
         if not is_silent and temp_file_path:
             # Transcribe audio
-            transcription = transcribe_audio(model, temp_file_path)
+            client = openai.OpenAI()
+            with open(temp_file_path, "rb") as f:
+                transcription = client.audio.transcriptions.create(
+                model="whisper-1",
+                file=f,
+                response_format="text"
+    )
             os.remove(temp_file_path)
             
             # Display user message
