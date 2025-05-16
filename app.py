@@ -24,9 +24,9 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # Initialize OpenAI models with API key from Streamlit secrets
-EMBEDDING_MODEL = OpenAIEmbeddings(openai_api_key)
+EMBEDDING_MODEL = OpenAIEmbeddings(api_key=openai_api_key)
 DOCUMENT_VECTOR_DB = InMemoryVectorStore(EMBEDDING_MODEL)
-LANGUAGE_MODEL = ChatOpenAI(openai_api_key)
+LANGUAGE_MODEL = ChatOpenAI(api_key=openai_api_key)
 
 PROMPT_TEMPLATE = """
 You are an voice assistant. You interact with customer calls and provide information from the context provided.
