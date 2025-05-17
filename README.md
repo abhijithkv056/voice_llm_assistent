@@ -62,6 +62,10 @@ python app.py
 
 ### 2. Web Interface (Recommended)
 ```bash
+ollama serve
+```
+
+```bash
 streamlit run streamlit_app.py
 ```
 
@@ -82,7 +86,7 @@ The web interface provides:
 ## Project Structure
 
 - `app.py`: Command-line interface version
-- `streamlit_app.py`: Web interface version
+- `st_app.py`: Web interface version
 - `voice_service.py`: Voice processing utilities
 - `rag/`: Contains restaurant information files
 - `requirements.txt`: Package dependencies
