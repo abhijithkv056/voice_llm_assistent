@@ -18,7 +18,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Copy your app code
-COPY . /app/
+COPY . .
 
 # Install Python dependencies
 RUN pip install --upgrade pip
