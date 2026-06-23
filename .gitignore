@@ -1,3 +1,12 @@
+# OS files
+.DS_Store
+
+# Temporary audio artifacts
+*.wav
+*.mp3
+temp_audio*.wav
+temp_audio*.mp3
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

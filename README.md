@@ -1,118 +1,104 @@
 # Restaurant Voice Assistant
 
-A voice-enabled restaurant assistant that helps customers with menu information and order taking using natural language processing.
+A voice-enabled restaurant assistant. It listens to a customer over the
+microphone, transcribes the speech, answers questions about the restaurant
+using a retrieval-augmented generation (RAG) pipeline backed by a local
+Ollama model, and replies with synthesized speech.
 
-## Features
+## How it works
 
-- Voice-based interaction with customers
-- Real-time speech-to-text conversion
-- Natural language understanding
-- Menu information retrieval
-- Order taking capabilities
-- Interactive web interface
+1. **Capture** – PyAudio records a mono, 16 kHz audio chunk and writes a WAV file.
+2. **Transcribe** – `faster-whisper` converts the WAV file to text.
+3. **Answer** – the transcription plus relevant context (retrieved from the
+   knowledge base via embeddings) is passed to an Ollama LLM using a prompt template.
+4. **Speak** – the reply is synthesized to MP3 with gTTS and played back via pygame.
+
+## Project structure
+
+```
+voice_assistant/
+├── __init__.py
+├── __main__.py        # `python -m voice_assistant` → CLI
+├── config.py          # Settings loaded from env / .env (pydantic-settings)
+├── logging_config.py  # Centralized logging setup
+├── conversation.py    # Rolling conversation history
+├── audio.py           # Microphone capture + silence detection
+├── transcription.py   # Whisper speech-to-text
+├── tts.py             # gTTS + pygame text-to-speech
+├── prompts.py         # Prompt template
+├── rag.py             # Document indexing + grounded answer generation
+├── assistant.py       # Orchestration shared by all frontends
+├── cli.py             # Command-line entrypoint
+└── web.py             # Streamlit entrypoint
+rag/restaurant_file.txt  # Knowledge base
+```
 
 ## Prerequisites
 
-- Python 3.10 or higher
-- Ollama installed with Mistral model
-- Working microphone
-- Speakers or headphones
+- Python 3.10+
+- [Ollama](https://ollama.com) running locally with the `mistral` model pulled
+- A working microphone and speakers
 
 ## Installation
 
-1. Clone the repository:
 ```bash
 git clone <repository-url>
 cd voice_assistant_llm
-```
 
-2. Create a virtual environment:
-```bash
 python -m venv .venv
-```
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
 
-3. Activate the virtual environment:
-- Windows:
-```bash
-.venv\Scripts\activate
-```
-- Linux/Mac:
-```bash
-source .venv/bin/activate
-```
+pip install -r requirements.txt    # or: pip install -e .
 
-4. Install the required packages:
-```bash
-pip install -r requirements.txt
-```
-
-5. Make sure Ollama is running and the Mistral model is pulled:
-```bash
 ollama pull mistral
 ```
 
-## Running the Application
+> **macOS/Linux:** PyAudio needs PortAudio installed
+> (`brew install portaudio` or `sudo apt-get install portaudio19-dev`).
 
-You can run the application in two ways:
+## Configuration
 
-### 1. Command Line Interface
-```bash
-python app.py
-```
-
-### 2. Web Interface (Recommended)
-```bash
-ollama serve
-```
+All settings have sensible defaults and can be overridden via environment
+variables or a `.env` file. Copy the example to get started:
 
 ```bash
-streamlit run streamlit_app.py
+cp .env.example .env
 ```
 
-The web interface provides:
-- Interactive chat interface
-- Menu display in sidebar
-- Easy-to-use voice recording buttons
-- Visual conversation history
+See [.env.example](.env.example) for the full list (Ollama model/URL, Whisper
+model size, audio parameters, logging level, etc.).
 
-## Usage
+## Running
 
-1. Start the application using either method above
-2. Click "Start Conversation" to begin
-3. Use the microphone button to speak your requests
-4. View the menu in the sidebar
-5. Interact naturally with the assistant
+Make sure Ollama is running (`ollama serve`).
 
-## Project Structure
+### Command line
 
-- `app.py`: Command-line interface version
-- `st_app.py`: Web interface version
-- `voice_service.py`: Voice processing utilities
-- `rag/`: Contains restaurant information files
-- `requirements.txt`: Package dependencies
+```bash
+python -m voice_assistant        # or: voice-assistant  (after `pip install -e .`)
+```
 
-## Troubleshooting
+Speak when you see `Listening...`. Say "goodbye", "stop", or "exit" to end.
 
-- Ensure your microphone is properly connected and has necessary permissions
-- Check if Ollama is running (`ollama serve`)
-- Verify that the Mistral model is downloaded
-- Make sure all dependencies are installed correctly
+### Web interface
+
+```bash
+streamlit run voice_assistant/web.py
+```
+
+## Docker
+
+The provided [Dockerfile](Dockerfile) builds the Streamlit frontend:
+
+```bash
+docker build -t voice-assistant .
+docker run -p 8501:8501 --device /dev/snd voice-assistant
+```
+
+> Audio is captured on the **server** side, so the container needs access to
+> the host's audio hardware (`--device /dev/snd` on Linux). Ollama must be
+> reachable from inside the container — set `OLLAMA_BASE_URL` accordingly.
 
 ## License
 
-[Your License]
-
-## Contributing
-
-[Contribution guidelines]
-
-
-Internal note:
-
-So how it work:
-
-1. Pyaudio --> access your mic to get a mono audio, 16Khz file -> then save it as .wave which Whisper can read and process
-2. whisper model --> takes the wave file and returns the transcription
-3. LLM -> takes the transcription + context (via RAG) and generates a response based on prompt template
-4. response is saved to an mp3 file via gTTS
-5. the mp3 file is payed back ny pygame library
+MIT

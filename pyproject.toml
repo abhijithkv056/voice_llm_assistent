@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "voice-assistant-llm"
+version = "1.0.0"
+description = "Restaurant voice assistant: Whisper STT + Ollama RAG + gTTS speech replies."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "faster-whisper==1.1.1",
+    "PyAudio==0.2.14",
+    "numpy==2.2.4",
+    "scipy==1.15.2",
+    "gTTS==2.5.4",
+    "pygame==2.6.1",
+    "langchain==0.3.21",
+    "langchain-core==0.3.45",
+    "langchain-community==0.3.20",
+    "langchain-ollama==0.2.3",
+    "langchain-text-splitters==0.3.7",
+    "streamlit==1.43.2",
+    "pydantic-settings==2.8.1",
+    "python-dotenv==1.0.1",
+]
+
+[project.scripts]
+voice-assistant = "voice_assistant.cli:run"
+
+[tool.setuptools.packages.find]
+include = ["voice_assistant*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
